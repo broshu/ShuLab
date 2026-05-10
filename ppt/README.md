@@ -1,1 +1,1 @@
-这里用于存放课程 PPT 文件。
+This folder is used to store course PPT files.
