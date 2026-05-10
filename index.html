@@ -68,6 +68,44 @@
             font-size: 12px;
             color: #d35400;
         }
+        .ask-section {
+            text-align: center;
+            margin-top: 60px;
+            padding: 40px 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        .ask-section p {
+            color: #6b7c8a;
+            margin: 0 0 24px 0;
+        }
+        .ask-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: #2980b9;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 999px;
+            box-shadow: 0 2px 6px rgba(41, 128, 185, 0.3);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+        }
+        .ask-button:hover {
+            background: #1f6391;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(41, 128, 185, 0.35);
+        }
+        .ask-button svg {
+            width: 20px;
+            height: 20px;
+        }
     </style>
 </head>
 <body>
@@ -104,5 +142,18 @@
             <div class="ppt-hint">Click to download</div>
         </a>
     </div>
+
+    <section class="ask-section">
+        <h2 style="margin-top:0;">Ask a Question</h2>
+        <p>Have a physics question? Click the button below to submit it through our form.</p>
+        <a class="ask-button" href="https://forms.microsoft.com/r/Lg4N3RAWZR" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-1.5 2-2.5 2.8-.5.4-.5 1-.5 1.7M12 17h.01"
+                      stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="12" r="9.5" stroke="#ffffff" stroke-width="2"/>
+            </svg>
+            Ask a Question
+        </a>
+    </section>
 </body>
 </html>
