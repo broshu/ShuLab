@@ -16,7 +16,7 @@
             margin-bottom: 40px;
         }
 
-        /* Two-column layout */
+        /* Two-column layout (auto-wrap) */
         .columns {
             display: flex;
             flex-wrap: wrap;
@@ -27,9 +27,6 @@
             margin: 0 auto;
         }
         .panel {
-            /* flex-basis 360px = ideal width; can shrink down to min-width 280px.
-               When the row can't fit two panels side by side, the second one
-               automatically wraps onto a new line and they stack vertically. */
             flex: 1 1 360px;
             min-width: 280px;
             max-width: 520px;
@@ -44,7 +41,7 @@
             text-align: center;
         }
 
-        /* Left panel: PPT list (one row per file) */
+        /* Shared row layout for downloadable files */
         .ppt-list {
             list-style: none;
             margin: 0;
@@ -85,7 +82,7 @@
             flex-shrink: 0;
         }
 
-        /* Resources panel: same row layout as PPT, different accent color */
+        /* Resources (green) variant */
         .resource-row:hover {
             background: #e6f4ec !important;
         }
@@ -93,7 +90,7 @@
             color: #16a085 !important;
         }
 
-        /* Collapsible folder tree (uses native <details>/<summary>) */
+        /* Collapsible folder tree */
         .resource-tree {
             font-size: 14px;
             max-height: 70vh;
@@ -110,18 +107,13 @@
             padding: 8px 10px;
             border-radius: 6px;
             cursor: pointer;
-            list-style: none;          /* hide default disclosure triangle */
+            list-style: none;
             user-select: none;
             background: #f8fafc;
             transition: background 0.15s ease;
         }
-        .resource-tree summary::-webkit-details-marker {
-            display: none;             /* Safari */
-        }
-        .resource-tree summary:hover {
-            background: #e6f4ec;
-        }
-        /* Custom rotating chevron */
+        .resource-tree summary::-webkit-details-marker { display: none; }
+        .resource-tree summary:hover { background: #e6f4ec; }
         .resource-tree summary::before {
             content: "▶";
             font-size: 10px;
@@ -131,40 +123,31 @@
             width: 10px;
             flex-shrink: 0;
         }
-        .resource-tree details[open] > summary::before {
-            transform: rotate(90deg);
-        }
-        .resource-tree .folder-icon {
-            font-size: 14px;
-        }
-        .resource-tree .folder-name {
-            font-weight: 500;
-            word-break: break-word;
-        }
-        /* Indent children of every folder */
+        .resource-tree details[open] > summary::before { transform: rotate(90deg); }
+        .resource-tree .folder-icon { font-size: 14px; }
+        .resource-tree .folder-name { font-weight: 500; word-break: break-word; }
         .resource-tree .folder-body {
             margin-left: 18px;
             border-left: 1px dashed #d4e4dc;
             padding-left: 10px;
             margin-top: 4px;
         }
-        /* Tighter file rows inside the tree */
-        .resource-tree .file-row {
-            padding: 8px 10px;
-            margin: 2px 0;
-        }
-        .resource-tree .file-row .filename {
-            font-size: 13px;
-        }
+        .resource-tree .file-row { padding: 8px 10px; margin: 2px 0; }
+        .resource-tree .file-row .filename { font-size: 13px; }
 
-        /* Right panel: Ask a Question */
-        .ask-panel {
+        /* Loading / empty / error states */
+        .loading, .empty, .error {
             text-align: center;
+            color: #90a4b3;
+            font-size: 14px;
+            padding: 20px 12px;
+            font-style: italic;
         }
-        .ask-panel p {
-            color: #6b7c8a;
-            margin: 0 0 24px 0;
-        }
+        .error { color: #c0392b; }
+
+        /* Ask a Question panel */
+        .ask-panel { text-align: center; }
+        .ask-panel p { color: #6b7c8a; margin: 0 0 24px 0; }
         .ask-button {
             display: inline-flex;
             align-items: center;
@@ -184,272 +167,30 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 14px rgba(41, 128, 185, 0.35);
         }
-        .ask-button svg {
-            width: 20px;
-            height: 20px;
-        }
+        .ask-button svg { width: 20px; height: 20px; }
     </style>
 </head>
 <body>
     <h1>Welcome to Mr. Shu Physics Lab</h1>
 
     <div class="columns">
-        <!-- Left panel: Lecture Slides list -->
+        <!-- Lecture Slides — populated by JS from GitHub -->
         <section class="panel">
             <h2>Lecture Slides</h2>
-            <ul class="ppt-list">
-                <li>
-                    <a class="ppt-row" href="ppt/第1课时　电容器及电容.pptx" download>
-                        <svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z"
-                                  fill="#ffffff" stroke="#d35400" stroke-width="2"/>
-                            <path d="M40 4 V18 H54" fill="none" stroke="#d35400" stroke-width="2"/>
-                            <rect x="16" y="34" width="32" height="18" rx="2" fill="#d35400"/>
-                            <text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif"
-                                  font-size="10" font-weight="bold" fill="#ffffff">PPT</text>
-                        </svg>
-                        <span class="filename">第1课时　电容器及电容.pptx</span>
-                        <span class="download-arrow">↓</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="ppt-row" href="ppt/电容器的电容.pptx" download>
-                        <svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z"
-                                  fill="#ffffff" stroke="#d35400" stroke-width="2"/>
-                            <path d="M40 4 V18 H54" fill="none" stroke="#d35400" stroke-width="2"/>
-                            <rect x="16" y="34" width="32" height="18" rx="2" fill="#d35400"/>
-                            <text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif"
-                                  font-size="10" font-weight="bold" fill="#ffffff">PPT</text>
-                        </svg>
-                        <span class="filename">电容器的电容.pptx</span>
-                        <span class="download-arrow">↓</span>
-                    </a>
-                </li>
+            <ul id="ppt-list" class="ppt-list">
+                <li class="loading">Loading…</li>
             </ul>
         </section>
 
-        <!-- Middle panel: Resources list -->
+        <!-- Resources — populated by JS from GitHub -->
         <section class="panel">
             <h2>Resources</h2>
-                <div class="resource-tree">
-                <details class="folder">
-                    <summary><span class="folder-icon">📁</span><span class="folder-name">学生用书Word文档</span></summary>
-                    <div class="folder-body">
-                        <details class="folder">
-                            <summary><span class="folder-icon">📁</span><span class="folder-name">参考答案与详解</span></summary>
-                            <div class="folder-body">
-                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/参考答案与详解/学习讲义部分.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">学习讲义部分.docx</span><span class="download-arrow">↓</span></a>
-                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/参考答案与详解/答案目录.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">答案目录.docx</span><span class="download-arrow">↓</span></a>
-                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/参考答案与详解/综合质量检测部分.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">综合质量检测部分.docx</span><span class="download-arrow">↓</span></a>
-                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/参考答案与详解/课时跟踪检测部分.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">课时跟踪检测部分.docx</span><span class="download-arrow">↓</span></a>
-                            </div>
-                        </details>
-                        <details class="folder">
-                            <summary><span class="folder-icon">📁</span><span class="folder-name">学生用书</span></summary>
-                            <div class="folder-body">
-                                <details class="folder">
-                                    <summary><span class="folder-icon">📁</span><span class="folder-name">第九章　静电场及其应用</span></summary>
-                                    <div class="folder-body">
-                                        <details class="folder">
-                                            <summary><span class="folder-icon">📁</span><span class="folder-name">3.电场　电场强度</span></summary>
-                                            <div class="folder-body">
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第九章　静电场及其应用/3.电场　电场强度/第1课时　电场强度　电场强度的叠加.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第1课时　电场强度　电场强度的叠加.docx</span><span class="download-arrow">↓</span></a>
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第九章　静电场及其应用/3.电场　电场强度/第2课时　电场线　匀强电场.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第2课时　电场线　匀强电场.docx</span><span class="download-arrow">↓</span></a>
-                                            </div>
-                                        </details>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第九章　静电场及其应用/1.电荷.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">1.电荷.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第九章　静电场及其应用/2.库仑定律.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">2.库仑定律.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第九章　静电场及其应用/4.静电的防止与利用.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">4.静电的防止与利用.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第九章　静电场及其应用/专题强化1　库仑力作用下的平衡与加速.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化1　库仑力作用下的平衡与加速.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第九章　静电场及其应用/专题强化2　静电力的性质.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化2　静电力的性质.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第九章　静电场及其应用/章末整合提升.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">章末整合提升.docx</span><span class="download-arrow">↓</span></a>
-                                    </div>
-                                </details>
-                                <details class="folder">
-                                    <summary><span class="folder-icon">📁</span><span class="folder-name">第十一章　电路及其应用</span></summary>
-                                    <div class="folder-body">
-                                        <details class="folder">
-                                            <summary><span class="folder-icon">📁</span><span class="folder-name">3.实验：导体电阻率的测量</span></summary>
-                                            <div class="folder-body">
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十一章　电路及其应用/3.实验：导体电阻率的测量/第1课时　长度的测量及测量工具的选用.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第1课时　长度的测量及测量工具的选用.docx</span><span class="download-arrow">↓</span></a>
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十一章　电路及其应用/3.实验：导体电阻率的测量/第2课时　实验：金属丝电阻率的测量.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第2课时　实验：金属丝电阻率的测量.docx</span><span class="download-arrow">↓</span></a>
-                                            </div>
-                                        </details>
-                                        <details class="folder">
-                                            <summary><span class="folder-icon">📁</span><span class="folder-name">4.串联电路和并联电路</span></summary>
-                                            <div class="folder-body">
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十一章　电路及其应用/4.串联电路和并联电路/第1课时　串联电路和并联电路.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第1课时　串联电路和并联电路.docx</span><span class="download-arrow">↓</span></a>
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十一章　电路及其应用/4.串联电路和并联电路/第2课时　电压表和电流表的电路结构.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第2课时　电压表和电流表的电路结构.docx</span><span class="download-arrow">↓</span></a>
-                                            </div>
-                                        </details>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十一章　电路及其应用/1.电源和电流.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">1.电源和电流.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十一章　电路及其应用/2.导体的电阻.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">2.导体的电阻.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十一章　电路及其应用/5.实验：练习使用多用电表.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">5.实验：练习使用多用电表.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十一章　电路及其应用/专题强化5　电阻的测量.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化5　电阻的测量.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十一章　电路及其应用/章末整合提升.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">章末整合提升.docx</span><span class="download-arrow">↓</span></a>
-                                    </div>
-                                </details>
-                                <details class="folder">
-                                    <summary><span class="folder-icon">📁</span><span class="folder-name">第十三章　电磁感应与电磁波初步</span></summary>
-                                    <div class="folder-body">
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十三章　电磁感应与电磁波初步/1.磁场　磁感线.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">1.磁场　磁感线.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十三章　电磁感应与电磁波初步/2.磁感应强度　磁通量.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">2.磁感应强度　磁通量.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十三章　电磁感应与电磁波初步/3.电磁感应现象及应用.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">3.电磁感应现象及应用.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十三章　电磁感应与电磁波初步/4.电磁波的发现及应用　5.能量量子化.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">4.电磁波的发现及应用　5.能量量子化.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十三章　电磁感应与电磁波初步/章末整合提升.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">章末整合提升.docx</span><span class="download-arrow">↓</span></a>
-                                    </div>
-                                </details>
-                                <details class="folder">
-                                    <summary><span class="folder-icon">📁</span><span class="folder-name">第十二章　电能　能量守恒定律</span></summary>
-                                    <div class="folder-body">
-                                        <details class="folder">
-                                            <summary><span class="folder-icon">📁</span><span class="folder-name">2.闭合电路的欧姆定律</span></summary>
-                                            <div class="folder-body">
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十二章　电能　能量守恒定律/2.闭合电路的欧姆定律/第1课时　闭合电路的欧姆定律.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第1课时　闭合电路的欧姆定律.docx</span><span class="download-arrow">↓</span></a>
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十二章　电能　能量守恒定律/2.闭合电路的欧姆定律/第2课时　路端电压与负载的关系.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第2课时　路端电压与负载的关系.docx</span><span class="download-arrow">↓</span></a>
-                                            </div>
-                                        </details>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十二章　电能　能量守恒定律/1.电路中的能量转化.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">1.电路中的能量转化.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十二章　电能　能量守恒定律/3.实验：电池电动势和内阻的测量.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">3.实验：电池电动势和内阻的测量.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十二章　电能　能量守恒定律/4.能源与可持续发展.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">4.能源与可持续发展.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十二章　电能　能量守恒定律/专题强化6　闭合电路的功率、效率及动态分析.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化6　闭合电路的功率、效率及动态分析.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十二章　电能　能量守恒定律/专题强化7　含电容电路的分析与计算　电路故障分析.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化7　含电容电路的分析与计算　电路故障分析.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十二章　电能　能量守恒定律/专题强化8　安阻法和伏阻法测量电池的电动势和内阻.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化8　安阻法和伏阻法测量电池的电动势和内阻.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十二章　电能　能量守恒定律/章末整合提升.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">章末整合提升.docx</span><span class="download-arrow">↓</span></a>
-                                    </div>
-                                </details>
-                                <details class="folder">
-                                    <summary><span class="folder-icon">📁</span><span class="folder-name">第十章　静电场中的能量</span></summary>
-                                    <div class="folder-body">
-                                        <details class="folder">
-                                            <summary><span class="folder-icon">📁</span><span class="folder-name">4.电容器的电容</span></summary>
-                                            <div class="folder-body">
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十章　静电场中的能量/4.电容器的电容/第1课时　电容器及电容.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第1课时　电容器及电容.docx</span><span class="download-arrow">↓</span></a>
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十章　静电场中的能量/4.电容器的电容/第2课时　平行板电容器　常用电容器.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第2课时　平行板电容器　常用电容器.docx</span><span class="download-arrow">↓</span></a>
-                                            </div>
-                                        </details>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十章　静电场中的能量/1.电势能和电势.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">1.电势能和电势.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十章　静电场中的能量/2.电势差.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">2.电势差.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十章　静电场中的能量/3.电势差与电场强度的关系.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">3.电势差与电场强度的关系.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十章　静电场中的能量/5.带电粒子在电场中的运动.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">5.带电粒子在电场中的运动.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十章　静电场中的能量/专题强化3　带电粒子在电场中的运动轨迹　功能关系和图像问题.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化3　带电粒子在电场中的运动轨迹　功能关系和图像问题.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十章　静电场中的能量/专题强化4　带电粒子（体）在电场中运动的综合问题.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化4　带电粒子（体）在电场中运动的综合问题.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/第十章　静电场中的能量/章末整合提升.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">章末整合提升.docx</span><span class="download-arrow">↓</span></a>
-                                    </div>
-                                </details>
-                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/学生目录.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">学生目录.docx</span><span class="download-arrow">↓</span></a>
-                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/学生用书/知识梳理答案.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">知识梳理答案.docx</span><span class="download-arrow">↓</span></a>
-                            </div>
-                        </details>
-                        <details class="folder">
-                            <summary><span class="folder-icon">📁</span><span class="folder-name">综合质量检测</span></summary>
-                            <div class="folder-body">
-                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/综合质量检测/模块达标检测.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">模块达标检测.docx</span><span class="download-arrow">↓</span></a>
-                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/综合质量检测/章末综合检测（一）　静电场及其应用.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">章末综合检测（一）　静电场及其应用.docx</span><span class="download-arrow">↓</span></a>
-                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/综合质量检测/章末综合检测（三）　电路及其应用.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">章末综合检测（三）　电路及其应用.docx</span><span class="download-arrow">↓</span></a>
-                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/综合质量检测/章末综合检测（二）　静电场中的能量.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">章末综合检测（二）　静电场中的能量.docx</span><span class="download-arrow">↓</span></a>
-                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/综合质量检测/章末综合检测（五）　电磁感应与电磁波初步.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">章末综合检测（五）　电磁感应与电磁波初步.docx</span><span class="download-arrow">↓</span></a>
-                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/综合质量检测/章末综合检测（四）　电能　能量守恒定律.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">章末综合检测（四）　电能　能量守恒定律.docx</span><span class="download-arrow">↓</span></a>
-                            </div>
-                        </details>
-                        <details class="folder">
-                            <summary><span class="folder-icon">📁</span><span class="folder-name">课时跟踪检测</span></summary>
-                            <div class="folder-body">
-                                <details class="folder">
-                                    <summary><span class="folder-icon">📁</span><span class="folder-name">第九章　静电场及其应用</span></summary>
-                                    <div class="folder-body">
-                                        <details class="folder">
-                                            <summary><span class="folder-icon">📁</span><span class="folder-name">3.电场　电场强度</span></summary>
-                                            <div class="folder-body">
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第九章　静电场及其应用/3.电场　电场强度/第1课时　电场强度　电场强度的叠加.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第1课时　电场强度　电场强度的叠加.docx</span><span class="download-arrow">↓</span></a>
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第九章　静电场及其应用/3.电场　电场强度/第2课时　电场线　匀强电场.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第2课时　电场线　匀强电场.docx</span><span class="download-arrow">↓</span></a>
-                                            </div>
-                                        </details>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第九章　静电场及其应用/1.电荷.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">1.电荷.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第九章　静电场及其应用/2.库仑定律.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">2.库仑定律.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第九章　静电场及其应用/4.静电的防止与利用.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">4.静电的防止与利用.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第九章　静电场及其应用/专题强化1　库仑力作用下的平衡与加速.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化1　库仑力作用下的平衡与加速.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第九章　静电场及其应用/专题强化2　静电力的性质.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化2　静电力的性质.docx</span><span class="download-arrow">↓</span></a>
-                                    </div>
-                                </details>
-                                <details class="folder">
-                                    <summary><span class="folder-icon">📁</span><span class="folder-name">第十一章　电路及其应用</span></summary>
-                                    <div class="folder-body">
-                                        <details class="folder">
-                                            <summary><span class="folder-icon">📁</span><span class="folder-name">3.实验：导体电阻率的测量</span></summary>
-                                            <div class="folder-body">
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十一章　电路及其应用/3.实验：导体电阻率的测量/第1课时　长度的测量及测量工具的选用.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第1课时　长度的测量及测量工具的选用.docx</span><span class="download-arrow">↓</span></a>
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十一章　电路及其应用/3.实验：导体电阻率的测量/第2课时　实验：金属丝电阻率的测量.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第2课时　实验：金属丝电阻率的测量.docx</span><span class="download-arrow">↓</span></a>
-                                            </div>
-                                        </details>
-                                        <details class="folder">
-                                            <summary><span class="folder-icon">📁</span><span class="folder-name">4.串联电路和并联电路</span></summary>
-                                            <div class="folder-body">
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十一章　电路及其应用/4.串联电路和并联电路/第1课时　串联电路和并联电路.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第1课时　串联电路和并联电路.docx</span><span class="download-arrow">↓</span></a>
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十一章　电路及其应用/4.串联电路和并联电路/第2课时　电压表和电流表的电路结构.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第2课时　电压表和电流表的电路结构.docx</span><span class="download-arrow">↓</span></a>
-                                            </div>
-                                        </details>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十一章　电路及其应用/1.电源和电流.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">1.电源和电流.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十一章　电路及其应用/2.导体的电阻.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">2.导体的电阻.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十一章　电路及其应用/5.实验：练习使用多用电表.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">5.实验：练习使用多用电表.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十一章　电路及其应用/专题强化5　电阻的测量.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化5　电阻的测量.docx</span><span class="download-arrow">↓</span></a>
-                                    </div>
-                                </details>
-                                <details class="folder">
-                                    <summary><span class="folder-icon">📁</span><span class="folder-name">第十三章　电磁感应与电磁波初步</span></summary>
-                                    <div class="folder-body">
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十三章　电磁感应与电磁波初步/1.磁场　磁感线.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">1.磁场　磁感线.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十三章　电磁感应与电磁波初步/2.磁感应强度　磁通量.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">2.磁感应强度　磁通量.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十三章　电磁感应与电磁波初步/3.电磁感应现象及应用.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">3.电磁感应现象及应用.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十三章　电磁感应与电磁波初步/4.电磁波的发现及应用　5.能量量子化.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">4.电磁波的发现及应用　5.能量量子化.docx</span><span class="download-arrow">↓</span></a>
-                                    </div>
-                                </details>
-                                <details class="folder">
-                                    <summary><span class="folder-icon">📁</span><span class="folder-name">第十二章　电能　能量守恒定律</span></summary>
-                                    <div class="folder-body">
-                                        <details class="folder">
-                                            <summary><span class="folder-icon">📁</span><span class="folder-name">2.闭合电路的欧姆定律</span></summary>
-                                            <div class="folder-body">
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十二章　电能　能量守恒定律/2.闭合电路的欧姆定律/第1课时　闭合电路的欧姆定律.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第1课时　闭合电路的欧姆定律.docx</span><span class="download-arrow">↓</span></a>
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十二章　电能　能量守恒定律/2.闭合电路的欧姆定律/第2课时　路端电压与负载的关系.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第2课时　路端电压与负载的关系.docx</span><span class="download-arrow">↓</span></a>
-                                            </div>
-                                        </details>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十二章　电能　能量守恒定律/1.电路中的能量转化.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">1.电路中的能量转化.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十二章　电能　能量守恒定律/3.实验：电池电动势和内阻的测量.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">3.实验：电池电动势和内阻的测量.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十二章　电能　能量守恒定律/4.能源与可持续发展.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">4.能源与可持续发展.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十二章　电能　能量守恒定律/专题强化6　闭合电路的功率、效率及动态分析.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化6　闭合电路的功率、效率及动态分析.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十二章　电能　能量守恒定律/专题强化7　含电容电路的分析与计算　电路故障分析.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化7　含电容电路的分析与计算　电路故障分析.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十二章　电能　能量守恒定律/专题强化8　安阻法和伏阻法测量电池的电动势和内阻.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化8　安阻法和伏阻法测量电池的电动势和内阻.docx</span><span class="download-arrow">↓</span></a>
-                                    </div>
-                                </details>
-                                <details class="folder">
-                                    <summary><span class="folder-icon">📁</span><span class="folder-name">第十章　静电场中的能量</span></summary>
-                                    <div class="folder-body">
-                                        <details class="folder">
-                                            <summary><span class="folder-icon">📁</span><span class="folder-name">4.电容器的电容</span></summary>
-                                            <div class="folder-body">
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十章　静电场中的能量/4.电容器的电容/第1课时　电容器及电容.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第1课时　电容器及电容.docx</span><span class="download-arrow">↓</span></a>
-                                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十章　静电场中的能量/4.电容器的电容/第2课时　平行板电容器　常用电容器.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">第2课时　平行板电容器　常用电容器.docx</span><span class="download-arrow">↓</span></a>
-                                            </div>
-                                        </details>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十章　静电场中的能量/1.电势能和电势.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">1.电势能和电势.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十章　静电场中的能量/2.电势差.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">2.电势差.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十章　静电场中的能量/3.电势差与电场强度的关系.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">3.电势差与电场强度的关系.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十章　静电场中的能量/5.带电粒子在电场中的运动.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">5.带电粒子在电场中的运动.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十章　静电场中的能量/专题强化3　带电粒子在电场中的运动轨迹　功能关系和图像问题.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化3　带电粒子在电场中的运动轨迹　功能关系和图像问题.docx</span><span class="download-arrow">↓</span></a>
-                                        <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/第十章　静电场中的能量/专题强化4　带电粒子（体）在电场中运动的综合问题.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">专题强化4　带电粒子（体）在电场中运动的综合问题.docx</span><span class="download-arrow">↓</span></a>
-                                    </div>
-                                </details>
-                                <a class="ppt-row resource-row file-row" href="resources/学生用书Word文档/课时跟踪检测/课时目录.docx" download><svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z" fill="#ffffff" stroke="#16a085" stroke-width="2"/><path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/><rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/><text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DOC</text></svg><span class="filename">课时目录.docx</span><span class="download-arrow">↓</span></a>
-                            </div>
-                        </details>
-                    </div>
-                </details>
-                </div>
-            </section>
+            <div id="resource-tree" class="resource-tree">
+                <div class="loading">Loading…</div>
+            </div>
+        </section>
 
-        <!-- Right panel: Ask a Question -->
+        <!-- Ask a Question -->
         <section class="panel ask-panel">
             <h2>Ask a Question</h2>
             <p>Have a physics question? Click the button below to submit it through our form.</p>
@@ -463,5 +204,162 @@
             </a>
         </section>
     </div>
+
+    <script>
+        // ===========================================================
+        //  Auto-load file lists from GitHub repo (broshu/ShuLab)
+        //  -----------------------------------------------------------
+        //  Whenever you push new files to the `ppt/` or `resources/`
+        //  folders on GitHub, they will appear on this page automatically
+        //  the next time someone loads it. No HTML edits required.
+        // ===========================================================
+
+        const REPO_OWNER = "broshu";
+        const REPO_NAME  = "ShuLab";
+        const BRANCH     = "main";
+
+        // Files we never want to show in the listing
+        const HIDDEN_FILES = new Set([".DS_Store", "README.md"]);
+
+        // SVG icon templates (kept inline so site has no external deps)
+        const ICON_PPT = `
+            <svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z"
+                      fill="#ffffff" stroke="#d35400" stroke-width="2"/>
+                <path d="M40 4 V18 H54" fill="none" stroke="#d35400" stroke-width="2"/>
+                <rect x="16" y="34" width="32" height="18" rx="2" fill="#d35400"/>
+                <text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif"
+                      font-size="10" font-weight="bold" fill="#ffffff">PPT</text>
+            </svg>`;
+
+        const ICON_DOC = `
+            <svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z"
+                      fill="#ffffff" stroke="#16a085" stroke-width="2"/>
+                <path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/>
+                <rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/>
+                <text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif"
+                      font-size="9" font-weight="bold" fill="#ffffff">DOC</text>
+            </svg>`;
+
+        // ---- helpers ----
+        const escapeHTML = (s) => String(s).replace(/[&<>"']/g,
+            c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]));
+
+        // GitHub raw download URL for a path in the repo
+        const rawUrl = (path) =>
+            `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${encodeURI(path)}`;
+
+        // Locale-aware sort that puts folders/files in a sensible order
+        const zhSort = (a, b) => a.localeCompare(b, "zh-Hans-CN", { numeric: true });
+
+        // ---- main: fetch entire repo file tree in one call ----
+        async function loadFileTree() {
+            const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/${BRANCH}?recursive=1`;
+            const res = await fetch(url, { headers: { "Accept": "application/vnd.github+json" } });
+            if (!res.ok) {
+                throw new Error(`GitHub API returned ${res.status}. ` +
+                    (res.status === 404 ? "Repo not found or private." :
+                     res.status === 403 ? "Rate-limited (try again later)." : ""));
+            }
+            const data = await res.json();
+            return data.tree || [];
+        }
+
+        // ---- render Lecture Slides (flat list of .pptx files in ppt/) ----
+        function renderPPT(tree) {
+            const list = document.getElementById("ppt-list");
+            const files = tree
+                .filter(it => it.type === "blob")
+                .filter(it => it.path.startsWith("ppt/"))
+                .map(it => it.path.substring("ppt/".length))
+                .filter(name => !name.includes("/"))            // top-level only
+                .filter(name => !HIDDEN_FILES.has(name))
+                .filter(name => /\.(pptx?|key)$/i.test(name))   // only slide files
+                .sort(zhSort);
+
+            if (files.length === 0) {
+                list.innerHTML = `<li class="empty">No slides yet.</li>`;
+                return;
+            }
+
+            list.innerHTML = files.map(name => `
+                <li>
+                    <a class="ppt-row" href="${rawUrl("ppt/" + name)}" download>
+                        ${ICON_PPT}
+                        <span class="filename">${escapeHTML(name)}</span>
+                        <span class="download-arrow">↓</span>
+                    </a>
+                </li>`).join("");
+        }
+
+        // ---- render Resources as a nested collapsible tree ----
+        function renderResources(tree) {
+            const container = document.getElementById("resource-tree");
+
+            // Keep only blobs under resources/, drop hidden files
+            const blobs = tree
+                .filter(it => it.type === "blob" && it.path.startsWith("resources/"))
+                .filter(it => {
+                    const name = it.path.split("/").pop();
+                    return !HIDDEN_FILES.has(name);
+                });
+
+            // Build a nested tree: { children: {name: node}, files: [{name, path}] }
+            const root = { children: {}, files: [] };
+            for (const item of blobs) {
+                const parts = item.path.split("/");
+                parts.shift();                          // drop leading "resources"
+                const fileName = parts.pop();
+                let node = root;
+                for (const p of parts) {
+                    node.children[p] = node.children[p] || { children: {}, files: [] };
+                    node = node.children[p];
+                }
+                node.files.push({ name: fileName, path: item.path });
+            }
+
+            const html = renderNode(root);
+            container.innerHTML = html || `<div class="empty">No resources yet.</div>`;
+        }
+
+        function renderNode(node) {
+            const folderNames = Object.keys(node.children).sort(zhSort);
+            const folderHTML = folderNames.map(name => `
+                <details class="folder">
+                    <summary>
+                        <span class="folder-icon">📁</span>
+                        <span class="folder-name">${escapeHTML(name)}</span>
+                    </summary>
+                    <div class="folder-body">${renderNode(node.children[name])}</div>
+                </details>`).join("");
+
+            const fileHTML = [...node.files]
+                .sort((a, b) => zhSort(a.name, b.name))
+                .map(f => `
+                    <a class="ppt-row resource-row file-row" href="${rawUrl(f.path)}" download>
+                        ${ICON_DOC}
+                        <span class="filename">${escapeHTML(f.name)}</span>
+                        <span class="download-arrow">↓</span>
+                    </a>`).join("");
+
+            return folderHTML + fileHTML;
+        }
+
+        // ---- error display ----
+        function showError(err) {
+            const msg = `Couldn't load files from GitHub: ${err.message}`;
+            document.getElementById("ppt-list").innerHTML =
+                `<li class="error">${escapeHTML(msg)}</li>`;
+            document.getElementById("resource-tree").innerHTML =
+                `<div class="error">${escapeHTML(msg)}</div>`;
+            console.error(err);
+        }
+
+        // ---- kick it off ----
+        loadFileTree()
+            .then(tree => { renderPPT(tree); renderResources(tree); })
+            .catch(showError);
+    </script>
 </body>
 </html>
