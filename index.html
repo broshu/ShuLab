@@ -90,6 +90,14 @@
             color: #16a085 !important;
         }
 
+        /* Games (purple) variant */
+        .game-row:hover {
+            background: #f1e6f7 !important;
+        }
+        .game-row .download-arrow {
+            color: #8e44ad !important;
+        }
+
         /* Collapsible folder tree */
         .resource-tree {
             font-size: 14px;
@@ -190,6 +198,14 @@
             </div>
         </section>
 
+        <!-- Games — populated by JS from GitHub -->
+        <section class="panel">
+            <h2>Games</h2>
+            <ul id="game-list" class="ppt-list">
+                <li class="loading">Loading…</li>
+            </ul>
+        </section>
+
         <!-- Ask a Question -->
         <section class="panel ask-panel">
             <h2>Ask a Question</h2>
@@ -240,6 +256,19 @@
                 <rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/>
                 <text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif"
                       font-size="9" font-weight="bold" fill="#ffffff">DOC</text>
+            </svg>`;
+
+        // Stylized game-controller icon
+        const ICON_GAME = `
+            <svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="6" y="20" width="52" height="30" rx="14"
+                      fill="#ffffff" stroke="#8e44ad" stroke-width="2"/>
+                <!-- D-pad on left -->
+                <rect x="14" y="32" width="12" height="4" rx="1" fill="#8e44ad"/>
+                <rect x="18" y="28" width="4" height="12" rx="1" fill="#8e44ad"/>
+                <!-- Two buttons on right -->
+                <circle cx="42" cy="30" r="3" fill="#8e44ad"/>
+                <circle cx="48" cy="38" r="3" fill="#8e44ad"/>
             </svg>`;
 
         // ---- helpers ----
@@ -346,6 +375,50 @@
             return folderHTML + fileHTML;
         }
 
+        // ---- render Games panel ----
+        // A "game" is any top-level folder under games/ that contains an index.html.
+        // Folder name is used as the display name. Clicking opens the game in a new tab.
+        function renderGames(tree) {
+            const list = document.getElementById("game-list");
+
+            const folders = new Set();
+            const indexHtmlOwners = new Set();
+
+            for (const item of tree) {
+                if (!item.path.startsWith("games/")) continue;
+                const rel = item.path.substring("games/".length);
+                const parts = rel.split("/");
+
+                if (item.type === "tree" && parts.length === 1 && parts[0]) {
+                    folders.add(parts[0]);                    // top-level subfolder
+                }
+                if (item.type === "blob" && parts.length === 2 &&
+                    parts[1].toLowerCase() === "index.html") {
+                    indexHtmlOwners.add(parts[0]);            // folder has an index.html
+                }
+            }
+
+            const games = [...folders]
+                .filter(f => indexHtmlOwners.has(f))          // require an index.html
+                .sort(zhSort);
+
+            if (games.length === 0) {
+                list.innerHTML = `<li class="empty">No games yet.</li>`;
+                return;
+            }
+
+            // Use a relative URL so the game's own assets (css/js/images) load correctly
+            list.innerHTML = games.map(name => `
+                <li>
+                    <a class="ppt-row game-row" href="games/${encodeURI(name)}/index.html"
+                       target="_blank" rel="noopener">
+                        ${ICON_GAME}
+                        <span class="filename">${escapeHTML(name)}</span>
+                        <span class="download-arrow">▶</span>
+                    </a>
+                </li>`).join("");
+        }
+
         // ---- error display ----
         function showError(err) {
             const msg = `Couldn't load files from GitHub: ${err.message}`;
@@ -353,12 +426,14 @@
                 `<li class="error">${escapeHTML(msg)}</li>`;
             document.getElementById("resource-tree").innerHTML =
                 `<div class="error">${escapeHTML(msg)}</div>`;
+            document.getElementById("game-list").innerHTML =
+                `<li class="error">${escapeHTML(msg)}</li>`;
             console.error(err);
         }
 
         // ---- kick it off ----
         loadFileTree()
-            .then(tree => { renderPPT(tree); renderResources(tree); })
+            .then(tree => { renderPPT(tree); renderResources(tree); renderGames(tree); })
             .catch(showError);
     </script>
 </body>
