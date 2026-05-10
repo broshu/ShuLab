@@ -85,6 +85,14 @@
             flex-shrink: 0;
         }
 
+        /* Resources panel: same row layout as PPT, different accent color */
+        .resource-row:hover {
+            background: #e6f4ec !important;
+        }
+        .resource-row .download-arrow {
+            color: #16a085 !important;
+        }
+
         /* Right panel: Ask a Question */
         .ask-panel {
             text-align: center;
@@ -153,6 +161,35 @@
                         <span class="filename">电容器的电容.pptx</span>
                         <span class="download-arrow">↓</span>
                     </a>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Middle panel: Resources list -->
+        <section class="panel">
+            <h2>Resources</h2>
+            <ul class="ppt-list">
+                <!-- No resource files yet. To add one, drop the file into the
+                     resources/ folder and copy a <li>…</li> block below, updating
+                     the href and the filename text. Example:
+
+                <li>
+                    <a class="ppt-row resource-row" href="resources/example.pdf" download>
+                        <svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z"
+                                  fill="#ffffff" stroke="#16a085" stroke-width="2"/>
+                            <path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/>
+                            <line x1="18" y1="30" x2="46" y2="30" stroke="#16a085" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="18" y1="38" x2="46" y2="38" stroke="#16a085" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="18" y1="46" x2="36" y2="46" stroke="#16a085" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span class="filename">example.pdf</span>
+                        <span class="download-arrow">↓</span>
+                    </a>
+                </li>
+                -->
+                <li style="color:#90a4b3; text-align:center; padding:20px 12px; font-size:14px;">
+                    No resources yet. Drop files into the <code>resources/</code> folder.
                 </li>
             </ul>
         </section>
