@@ -13,73 +13,79 @@
         }
         h1 {
             text-align: center;
-            margin-bottom: 4px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #6b7c8a;
-            margin-top: 0;
             margin-bottom: 40px;
         }
-        h2 {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        .ppt-grid {
+
+        /* Two-column layout */
+        .columns {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
             gap: 24px;
+            justify-content: center;
+            align-items: flex-start;
             max-width: 1100px;
             margin: 0 auto;
         }
-        .ppt-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            width: 220px;
-            padding: 24px 16px 20px;
+        .panel {
+            flex: 1 1 420px;
+            min-width: 300px;
             background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            padding: 28px 28px 24px;
+            box-sizing: border-box;
         }
-        .ppt-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-        }
-        .ppt-icon {
-            width: 110px;
-            height: 110px;
-            margin-bottom: 16px;
-        }
-        .ppt-title {
-            font-size: 15px;
-            font-weight: 500;
+        .panel h2 {
+            margin: 0 0 20px 0;
             text-align: center;
+        }
+
+        /* Left panel: PPT list (one row per file) */
+        .ppt-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .ppt-list li + li {
+            margin-top: 8px;
+        }
+        .ppt-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            background: #f8fafc;
+            text-decoration: none;
+            color: #2c3e50;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+        .ppt-row:hover {
+            background: #fdecdc;
+            transform: translateX(2px);
+        }
+        .ppt-row .ppt-icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+        .ppt-row .filename {
+            font-size: 14px;
             line-height: 1.4;
             word-break: break-word;
         }
-        .ppt-hint {
-            margin-top: 10px;
-            font-size: 12px;
-            color: #d35400;
-        }
-        .ask-section {
-            text-align: center;
-            margin-top: 60px;
-            padding: 40px 20px;
-            background: #ffffff;
-            border-radius: 12px;
-            max-width: 700px;
+        .ppt-row .download-arrow {
             margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            color: #d35400;
+            font-size: 13px;
+            flex-shrink: 0;
         }
-        .ask-section p {
+
+        /* Right panel: Ask a Question */
+        .ask-panel {
+            text-align: center;
+        }
+        .ask-panel p {
             color: #6b7c8a;
             margin: 0 0 24px 0;
         }
@@ -110,50 +116,56 @@
 </head>
 <body>
     <h1>Welcome to Mr. Shu Physics Lab</h1>
-    <p class="subtitle">High school physics resources for download.</p>
 
-    <h2>Lecture Slides</h2>
+    <div class="columns">
+        <!-- Left panel: Lecture Slides list -->
+        <section class="panel">
+            <h2>Lecture Slides</h2>
+            <ul class="ppt-list">
+                <li>
+                    <a class="ppt-row" href="ppt/第1课时　电容器及电容.pptx" download>
+                        <svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z"
+                                  fill="#ffffff" stroke="#d35400" stroke-width="2"/>
+                            <path d="M40 4 V18 H54" fill="none" stroke="#d35400" stroke-width="2"/>
+                            <rect x="16" y="34" width="32" height="18" rx="2" fill="#d35400"/>
+                            <text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif"
+                                  font-size="10" font-weight="bold" fill="#ffffff">PPT</text>
+                        </svg>
+                        <span class="filename">第1课时　电容器及电容.pptx</span>
+                        <span class="download-arrow">↓</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="ppt-row" href="ppt/电容器的电容.pptx" download>
+                        <svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z"
+                                  fill="#ffffff" stroke="#d35400" stroke-width="2"/>
+                            <path d="M40 4 V18 H54" fill="none" stroke="#d35400" stroke-width="2"/>
+                            <rect x="16" y="34" width="32" height="18" rx="2" fill="#d35400"/>
+                            <text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif"
+                                  font-size="10" font-weight="bold" fill="#ffffff">PPT</text>
+                        </svg>
+                        <span class="filename">电容器的电容.pptx</span>
+                        <span class="download-arrow">↓</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
 
-    <div class="ppt-grid">
-        <a class="ppt-card" href="ppt/第1课时　电容器及电容.pptx" download>
-            <!-- PPT icon (inline SVG, no external assets) -->
-            <svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z"
-                      fill="#ffffff" stroke="#d35400" stroke-width="2"/>
-                <path d="M40 4 V18 H54" fill="none" stroke="#d35400" stroke-width="2"/>
-                <rect x="16" y="34" width="32" height="18" rx="2" fill="#d35400"/>
-                <text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif"
-                      font-size="10" font-weight="bold" fill="#ffffff">PPT</text>
-            </svg>
-            <div class="ppt-title">Lesson 1: Capacitors and Capacitance</div>
-            <div class="ppt-hint">Click to download</div>
-        </a>
-
-        <a class="ppt-card" href="ppt/电容器的电容.pptx" download>
-            <svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z"
-                      fill="#ffffff" stroke="#d35400" stroke-width="2"/>
-                <path d="M40 4 V18 H54" fill="none" stroke="#d35400" stroke-width="2"/>
-                <rect x="16" y="34" width="32" height="18" rx="2" fill="#d35400"/>
-                <text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif"
-                      font-size="10" font-weight="bold" fill="#ffffff">PPT</text>
-            </svg>
-            <div class="ppt-title">Capacitance of a Capacitor</div>
-            <div class="ppt-hint">Click to download</div>
-        </a>
+        <!-- Right panel: Ask a Question -->
+        <section class="panel ask-panel">
+            <h2>Ask a Question</h2>
+            <p>Have a physics question? Click the button below to submit it through our form.</p>
+            <a class="ask-button" href="https://forms.microsoft.com/r/Lg4N3RAWZR" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-1.5 2-2.5 2.8-.5.4-.5 1-.5 1.7M12 17h.01"
+                          stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="12" r="9.5" stroke="#ffffff" stroke-width="2"/>
+                </svg>
+                Ask a Question
+            </a>
+        </section>
     </div>
-
-    <section class="ask-section">
-        <h2 style="margin-top:0;">Ask a Question</h2>
-        <p>Have a physics question? Click the button below to submit it through our form.</p>
-        <a class="ask-button" href="https://forms.microsoft.com/r/Lg4N3RAWZR" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-1.5 2-2.5 2.8-.5.4-.5 1-.5 1.7M12 17h.01"
-                      stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="12" cy="12" r="9.5" stroke="#ffffff" stroke-width="2"/>
-            </svg>
-            Ask a Question
-        </a>
-    </section>
 </body>
 </html>
