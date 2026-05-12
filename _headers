@@ -1,9 +1,0 @@
-# Cloudflare Pages 自定义响应头
-# 文档: https://developers.cloudflare.com/pages/configuration/headers/
-#
-/
-  Cache-Control: public, max-age=0, must-revalidate
-/index.html
-  Cache-Control: public, max-age=0, must-revalidate
-/files.json
-  Cache-Control: public, max-age=0, must-revalidate

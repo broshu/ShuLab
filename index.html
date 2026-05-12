@@ -1,385 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mr. Shu Physics Lab</title>
-
-    <!--
-        中国大陆友好版本：浏览器只访问 Cloudflare Pages 本站。
-        Cloudflare 每次从 GitHub 自动部署时生成 files.json。
-    -->
-
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-                         "PingFang SC", "Microsoft YaHei", sans-serif;
-            margin: 0;
-            padding: 40px 20px;
-            background: #f5f7fa;
-            color: #2c3e50;
-        }
-        h1 { text-align: center; margin-bottom: 40px; }
-
-        .columns {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 24px;
-            justify-content: center;
-            align-items: flex-start;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-        .panel {
-            flex: 1 1 360px;
-            min-width: 280px;
-            max-width: 520px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            padding: 28px 28px 24px;
-            box-sizing: border-box;
-        }
-        .panel h2 { margin: 0 0 20px 0; text-align: center; }
-
-        .ppt-list { list-style: none; margin: 0; padding: 0; }
-        .ppt-list li + li { margin-top: 8px; }
-        .ppt-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 14px;
-            border-radius: 8px;
-            background: #f8fafc;
-            text-decoration: none;
-            color: #2c3e50;
-            transition: background 0.15s ease, transform 0.15s ease;
-        }
-        .ppt-row:hover { background: #fdecdc; transform: translateX(2px); }
-        .ppt-row .ppt-icon { width: 28px; height: 28px; flex-shrink: 0; }
-        .ppt-row .filename {
-            font-size: 14px;
-            line-height: 1.4;
-            word-break: break-word;
-        }
-        .ppt-row .download-arrow {
-            margin-left: auto;
-            color: #d35400;
-            font-size: 13px;
-            flex-shrink: 0;
-        }
-
-        .resource-row:hover { background: #e6f4ec !important; }
-        .resource-row .download-arrow { color: #16a085 !important; }
-        .game-row:hover { background: #f1e6f7 !important; }
-        .game-row .download-arrow { color: #8e44ad !important; }
-
-        .resource-tree {
-            font-size: 14px;
-            max-height: 70vh;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-        .resource-tree details.folder { margin: 2px 0; }
-        .resource-tree summary {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            list-style: none;
-            user-select: none;
-            background: #f8fafc;
-            transition: background 0.15s ease;
-        }
-        .resource-tree summary::-webkit-details-marker { display: none; }
-        .resource-tree summary:hover { background: #e6f4ec; }
-        .resource-tree summary::before {
-            content: "▶";
-            font-size: 10px;
-            color: #16a085;
-            transition: transform 0.15s ease;
-            display: inline-block;
-            width: 10px;
-            flex-shrink: 0;
-        }
-        .resource-tree details[open] > summary::before { transform: rotate(90deg); }
-        .resource-tree .folder-icon { font-size: 14px; }
-        .resource-tree .folder-name { font-weight: 500; word-break: break-word; }
-        .resource-tree .folder-body {
-            margin-left: 18px;
-            border-left: 1px dashed #d4e4dc;
-            padding-left: 10px;
-            margin-top: 4px;
-        }
-        .resource-tree .file-row { padding: 8px 10px; margin: 2px 0; }
-        .resource-tree .file-row .filename { font-size: 13px; }
-
-        .loading, .empty, .error {
-            text-align: center;
-            color: #90a4b3;
-            font-size: 14px;
-            padding: 20px 12px;
-            font-style: italic;
-        }
-        .error { color: #c0392b; }
-
-        .ask-panel { text-align: center; }
-        .ask-panel p { color: #6b7c8a; margin: 0 0 24px 0; }
-        .ask-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 32px;
-            background: #2980b9;
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 999px;
-            box-shadow: 0 2px 6px rgba(41, 128, 185, 0.3);
-            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-        }
-        .ask-button:hover {
-            background: #1f6391;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 14px rgba(41, 128, 185, 0.35);
-        }
-        .ask-button svg { width: 20px; height: 20px; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mr. Shu Physics Lab</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f6f7f9;
+      color: #1f2933;
+    }
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 48px 20px;
+    }
+    h1 {
+      margin: 0 0 28px;
+      font-size: 32px;
+      font-weight: 700;
+      text-align: center;
+    }
+    nav {
+      display: grid;
+      gap: 14px;
+    }
+    a {
+      display: block;
+      padding: 18px 20px;
+      border: 1px solid #dde3ea;
+      border-radius: 8px;
+      background: #fff;
+      color: #1f2933;
+      text-decoration: none;
+      font-size: 18px;
+    }
+    a:hover {
+      border-color: #9fb3c8;
+      background: #f9fbfd;
+    }
+  </style>
 </head>
 <body>
-    <h1>Welcome to Mr. Shu Physics Lab</h1>
-
-    <div class="columns">
-        <section class="panel">
-            <h2>Lecture Slides</h2>
-            <ul id="ppt-list" class="ppt-list">
-                <li class="loading">Loading…</li>
-            </ul>
-        </section>
-
-        <section class="panel">
-            <h2>Resources</h2>
-            <div id="resource-tree" class="resource-tree">
-                <div class="loading">Loading…</div>
-            </div>
-        </section>
-
-        <section class="panel">
-            <h2>Games</h2>
-            <ul id="game-list" class="ppt-list">
-                <li class="loading">Loading…</li>
-            </ul>
-        </section>
-
-        <section class="panel ask-panel">
-            <h2>Ask a Question</h2>
-            <a class="ask-button" href="https://forms.microsoft.com/r/Lg4N3RAWZR"
-               target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="none"
-                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-1.5 2-2.5 2.8-.5.4-.5 1-.5 1.7M12 17h.01"
-                          stroke="#ffffff" stroke-width="2"
-                          stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="12" cy="12" r="9.5"
-                            stroke="#ffffff" stroke-width="2"/>
-                </svg>
-                Ask a Question
-            </a>
-        </section>
-    </div>
-
-    <script>
-        // ===========================================================
-        //  从 Cloudflare 本站读取静态文件清单。
-        //  files.json 由 scripts/generate-files-json.js 在 Cloudflare 部署时生成。
-        // ===========================================================
-
-        const HIDDEN_FILES = new Set([
-            ".DS_Store", "README.md", ".gitkeep", ".gitattributes"
-        ]);
-
-        // 内联 SVG 图标，避免任何外部资源
-        const ICON_PPT = `
-            <svg class="ppt-icon" viewBox="0 0 64 64"
-                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z"
-                      fill="#ffffff" stroke="#d35400" stroke-width="2"/>
-                <path d="M40 4 V18 H54" fill="none" stroke="#d35400" stroke-width="2"/>
-                <rect x="16" y="34" width="32" height="18" rx="2" fill="#d35400"/>
-                <text x="32" y="47" text-anchor="middle"
-                      font-family="Arial, sans-serif" font-size="10"
-                      font-weight="bold" fill="#ffffff">PPT</text>
-            </svg>`;
-
-        const ICON_DOC = `
-            <svg class="ppt-icon" viewBox="0 0 64 64"
-                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z"
-                      fill="#ffffff" stroke="#16a085" stroke-width="2"/>
-                <path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/>
-                <rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/>
-                <text x="32" y="47" text-anchor="middle"
-                      font-family="Arial, sans-serif" font-size="9"
-                      font-weight="bold" fill="#ffffff">DOC</text>
-            </svg>`;
-
-        const ICON_GAME = `
-            <svg class="ppt-icon" viewBox="0 0 64 64"
-                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect x="6" y="20" width="52" height="30" rx="14"
-                      fill="#ffffff" stroke="#8e44ad" stroke-width="2"/>
-                <rect x="14" y="32" width="12" height="4" rx="1" fill="#8e44ad"/>
-                <rect x="18" y="28" width="4" height="12" rx="1" fill="#8e44ad"/>
-                <circle cx="42" cy="30" r="3" fill="#8e44ad"/>
-                <circle cx="48" cy="38" r="3" fill="#8e44ad"/>
-            </svg>`;
-
-        const escapeHTML = (s) => String(s).replace(/[&<>"']/g,
-            c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]));
-
-        // 把路径变成可用的相对 URL：encodeURI 处理中文/空格，保留 "/"
-        const localUrl = (path) => "./" + encodeURI(path);
-
-        const zhSort = (a, b) =>
-            a.localeCompare(b, "zh-Hans-CN", { numeric: true });
-
-        async function loadFiles() {
-            const res = await fetch("./files.json", { cache: "no-cache" });
-            if (!res.ok) {
-                throw new Error("files.json 加载失败：HTTP " + res.status);
-            }
-            const data = await res.json();
-            return (data.files || []).map(f => ({ path: f.path }));
-        }
-
-        function renderPPT(tree) {
-            const list = document.getElementById("ppt-list");
-            const files = tree
-                .filter(it => it.path.startsWith("ppt/"))
-                .map(it => it.path.substring("ppt/".length))
-                .filter(name => !name.includes("/"))
-                .filter(name => !HIDDEN_FILES.has(name))
-                .filter(name => /\.(pptx?|key)$/i.test(name))
-                .sort(zhSort);
-
-            if (files.length === 0) {
-                list.innerHTML = `<li class="empty">No slides yet.</li>`;
-                return;
-            }
-
-            list.innerHTML = files.map(name => `
-                <li>
-                    <a class="ppt-row" href="${localUrl("ppt/" + name)}" download>
-                        ${ICON_PPT}
-                        <span class="filename">${escapeHTML(name)}</span>
-                        <span class="download-arrow">↓</span>
-                    </a>
-                </li>`).join("");
-        }
-
-        function renderResources(tree) {
-            const container = document.getElementById("resource-tree");
-
-            const blobs = tree
-                .filter(it => it.path.startsWith("resources/"))
-                .filter(it => !HIDDEN_FILES.has(it.path.split("/").pop()));
-
-            const root = { children: {}, files: [] };
-            for (const item of blobs) {
-                const parts = item.path.split("/");
-                parts.shift(); // 去掉 "resources"
-                const fileName = parts.pop();
-                let node = root;
-                for (const p of parts) {
-                    node.children[p] = node.children[p] || { children: {}, files: [] };
-                    node = node.children[p];
-                }
-                node.files.push({ name: fileName, path: item.path });
-            }
-
-            const html = renderNode(root);
-            container.innerHTML = html || `<div class="empty">No resources yet.</div>`;
-        }
-
-        function renderNode(node) {
-            const folderNames = Object.keys(node.children).sort(zhSort);
-            const folderHTML = folderNames.map(name => `
-                <details class="folder">
-                    <summary>
-                        <span class="folder-icon">📁</span>
-                        <span class="folder-name">${escapeHTML(name)}</span>
-                    </summary>
-                    <div class="folder-body">${renderNode(node.children[name])}</div>
-                </details>`).join("");
-
-            const fileHTML = [...node.files]
-                .sort((a, b) => zhSort(a.name, b.name))
-                .map(f => `
-                    <a class="ppt-row resource-row file-row"
-                       href="${localUrl(f.path)}" download>
-                        ${ICON_DOC}
-                        <span class="filename">${escapeHTML(f.name)}</span>
-                        <span class="download-arrow">↓</span>
-                    </a>`).join("");
-
-            return folderHTML + fileHTML;
-        }
-
-        function renderGames(tree) {
-            const list = document.getElementById("game-list");
-
-            const folders = new Set();
-            const indexHtmlOwners = new Set();
-
-            for (const item of tree) {
-                if (!item.path.startsWith("games/")) continue;
-                const rel = item.path.substring("games/".length);
-                const parts = rel.split("/");
-                if (parts.length >= 1 && parts[0]) folders.add(parts[0]);
-                if (parts.length === 2 &&
-                    parts[1].toLowerCase() === "index.html") {
-                    indexHtmlOwners.add(parts[0]);
-                }
-            }
-
-            const games = [...folders]
-                .filter(f => indexHtmlOwners.has(f))
-                .sort(zhSort);
-
-            if (games.length === 0) {
-                list.innerHTML = `<li class="empty">No games yet.</li>`;
-                return;
-            }
-
-            list.innerHTML = games.map(name => `
-                <li>
-                    <a class="ppt-row game-row"
-                       href="${localUrl("games/" + name + "/index.html")}"
-                       target="_blank" rel="noopener">
-                        ${ICON_GAME}
-                        <span class="filename">${escapeHTML(name)}</span>
-                        <span class="download-arrow">▶</span>
-                    </a>
-                </li>`).join("");
-        }
-
-        function showError(err) {
-            const msg = "无法加载文件列表：" + err.message;
-            document.getElementById("ppt-list").innerHTML =
-                `<li class="error">${escapeHTML(msg)}</li>`;
-            document.getElementById("resource-tree").innerHTML =
-                `<div class="error">${escapeHTML(msg)}</div>`;
-            document.getElementById("game-list").innerHTML =
-                `<li class="error">${escapeHTML(msg)}</li>`;
-            console.error(err);
-        }
-
-        loadFiles()
-            .then(tree => { renderPPT(tree); renderResources(tree); renderGames(tree); })
-            .catch(showError);
-    </script>
+  <main>
+    <h1>Mr. Shu Physics Lab</h1>
+    <nav>
+      <a href="./ppt/">Lecture Slides</a>
+      <a href="./resources/">Resources</a>
+      <a href="./games/">Games</a>
+    </nav>
+  </main>
 </body>
 </html>
