@@ -6,13 +6,8 @@
     <title>Mr. Shu Physics Lab</title>
 
     <!--
-        ============================================================
-        中国大陆友好版本：浏览器不直连任何境外服务。
-        - 文件列表通过同站接口 /api/files 获取
-          （由 Cloudflare Pages Functions 在边缘节点代理 GitHub API）
-        - 所有 JS / CSS 内联，无任何外部 CDN
-        - 所有下载链接都是相对路径，从 phylab.uk 本站提供
-        ============================================================
+        中国大陆友好版本：浏览器只访问 Cloudflare Pages 本站。
+        Cloudflare 每次从 GitHub 自动部署时生成 files.json。
     -->
 
     <style>
@@ -198,12 +193,8 @@
 
     <script>
         // ===========================================================
-        //  通过同站接口 /api/files 获取文件列表
-        //  -----------------------------------------------------------
-        //  - 浏览器只请求 phylab.uk/api/files
-        //  - GitHub API 的调用发生在 Cloudflare 边缘 Pages Function
-        //    内部 (functions/api/files.js)，浏览器看不到也碰不到
-        //  - 所以中国大陆不挂 VPN 也能直接刷新就拿到最新文件树
+        //  从 Cloudflare 本站读取静态文件清单。
+        //  files.json 由 scripts/generate-files-json.js 在 Cloudflare 部署时生成。
         // ===========================================================
 
         const HIDDEN_FILES = new Set([
@@ -256,18 +247,9 @@
             a.localeCompare(b, "zh-Hans-CN", { numeric: true });
 
         async function loadFiles() {
-            // 同站接口，缓存策略由 Cloudflare Function 的响应头控制
-            const res = await fetch("/api/files");
+            const res = await fetch("./files.json", { cache: "no-cache" });
             if (!res.ok) {
-                // 尽量把后端 JSON 错误信息透传出来
-                let detail = "";
-                try {
-                    const j = await res.json();
-                    detail = j.error || j.detail || "";
-                } catch (_) {}
-                throw new Error(
-                    "/api/files 加载失败：HTTP " + res.status +
-                    (detail ? "（" + detail + "）" : ""));
+                throw new Error("files.json 加载失败：HTTP " + res.status);
             }
             const data = await res.json();
             return (data.files || []).map(f => ({ path: f.path }));

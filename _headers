@@ -1,10 +1,9 @@
 # Cloudflare Pages 自定义响应头
 # 文档: https://developers.cloudflare.com/pages/configuration/headers/
 #
-# 注意：/api/* 由 Pages Functions 处理，响应头在 functions/api/files.js
-# 内部自行设置，不会被这里覆盖。
-
 /
   Cache-Control: public, max-age=0, must-revalidate
 /index.html
+  Cache-Control: public, max-age=0, must-revalidate
+/files.json
   Cache-Control: public, max-age=0, must-revalidate

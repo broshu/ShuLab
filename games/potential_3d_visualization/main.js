@@ -16,6 +16,10 @@ const GRAVITY = 1.0;
 const DT = 1/120;
 const SUBSTEPS = 2;
 const PART_MASS = 1.0;
+const MAX_ACCEL = 36;      // cap near singularities; favors smoothness over exactness
+const MAX_SPEED = 12;
+const TRAIL_MAX_POINTS = 360;
+const TRAIL_MIN_STEP = 0.035;
 
 // ---------------------- State ----------------------
 const state = {
@@ -104,8 +108,19 @@ function drawExplosions2D() {
 // 2D view
 // ========================================================================
 const cvs = document.getElementById('canvas2d');
-const ctx = cvs.getContext('2d');
+const screenCtx = cvs.getContext('2d');
+let ctx = screenCtx;
 let W = 0, H = 0;
+const static2DCanvas = document.createElement('canvas');
+const static2DCtx = static2DCanvas.getContext('2d');
+let static2DDirty = true;
+let fieldRebuildDelayFrames = 0;
+
+function invalidateFieldVisuals() {
+  potentialBufferDirty = true;
+  static2DDirty = true;
+  surfaceDirty = true;
+}
 
 function resize2D() {
   const rect = cvs.parentElement.getBoundingClientRect();
@@ -114,9 +129,10 @@ function resize2D() {
   cvs.height = Math.floor(rect.height * dpr);
   cvs.style.width = rect.width + 'px';
   cvs.style.height = rect.height + 'px';
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  screenCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
   W = rect.width; H = rect.height;
   potentialBufferDirty = true;
+  static2DDirty = true;
 }
 
 function worldToScreen(x, y) {
@@ -416,13 +432,34 @@ function drawAxes() {
   ctx.stroke();
 }
 
-function render2D() {
+function renderStatic2D() {
+  if (!static2DDirty) return;
+  const hasCachedFrame = static2DCanvas.width > 0 && static2DCanvas.height > 0;
+  if (fieldRebuildDelayFrames > 0 && hasCachedFrame) return;
+
+  static2DCanvas.width = Math.max(1, Math.floor(W));
+  static2DCanvas.height = Math.max(1, Math.floor(H));
+  const previousCtx = ctx;
+  ctx = static2DCtx;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, W, H);
   drawPotentialBg();
   drawAxes();
   drawFieldLines();
   drawEquipotential();
+  ctx = previousCtx;
+  static2DDirty = false;
+}
+
+function render2D() {
+  renderStatic2D();
+  ctx = screenCtx;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W, H);
+  if (static2DCanvas.width > 0 && static2DCanvas.height > 0) {
+    ctx.drawImage(static2DCanvas, 0, 0, W, H);
+  }
   drawCharges2D();
   drawParticles2D();
   drawExplosions2D();
@@ -437,10 +474,10 @@ cvs.addEventListener('mousedown', (e) => {
   const [wx, wy] = screenToWorld(sx, sy);
   if (state.mode === 'pos') {
     state.charges.push({x: wx, y: wy, q: state.qMag});
-    potentialBufferDirty = true; rebuildSurface();
+    invalidateFieldVisuals();
   } else if (state.mode === 'neg') {
     state.charges.push({x: wx, y: wy, q: -state.qMag});
-    potentialBufferDirty = true; rebuildSurface();
+    invalidateFieldVisuals();
   } else if (state.mode === 'part') {
     state.drag = {x0: wx, y0: wy, x1: wx, y1: wy};
   }
@@ -489,8 +526,9 @@ cvs.addEventListener('contextmenu', (e) => {
     if (d2 < bestD) { bestD = d2; best = i; }
   }
   if (best >= 0) {
-    state.charges.splice(best, 1);
-    potentialBufferDirty = true; rebuildSurface();
+    const [removed] = state.charges.splice(best, 1);
+    removeChargeMeshForCharge(removed);
+    invalidateFieldVisuals();
     return;
   }
   // else delete nearest particle
@@ -541,8 +579,38 @@ let surfaceMesh, surfaceGeom, surfaceMat, wireframeMesh;
 const chargeMeshes = [];
 const particleMeshes = [];
 const trailLines = [];
-const SURF_N = 110;
+const SURF_N = 72;
 let surfaceDirty = false;   // coalesce rebuildSurface() calls to once per frame
+
+function clearTrailLine(tl) {
+  tl.count = 0;
+  tl.lastX = NaN; tl.lastY = NaN; tl.lastZ = NaN;
+  tl.line.geometry.setDrawRange(0, 0);
+  tl.line.visible = false;
+}
+
+function appendTrailPoint(tl, x, y, z) {
+  if (Number.isFinite(tl.lastX)) {
+    const dx = x - tl.lastX, dy = y - tl.lastY, dz = z - tl.lastZ;
+    if (dx*dx + dy*dy + dz*dz < TRAIL_MIN_STEP*TRAIL_MIN_STEP) return;
+  }
+  let idx = tl.count;
+  if (tl.count < TRAIL_MAX_POINTS) {
+    tl.count++;
+  } else {
+    tl.positions.copyWithin(0, 3);
+    idx = TRAIL_MAX_POINTS - 1;
+  }
+  const offset = idx * 3;
+  tl.positions[offset] = x;
+  tl.positions[offset + 1] = y;
+  tl.positions[offset + 2] = z;
+  tl.lastX = x; tl.lastY = y; tl.lastZ = z;
+  const attr = tl.line.geometry.attributes.position;
+  attr.needsUpdate = true;
+  tl.line.geometry.setDrawRange(0, tl.count);
+  tl.line.visible = true;
+}
 
 function init3D() {
   const rect = container3d.getBoundingClientRect();
@@ -555,7 +623,7 @@ function init3D() {
   camera.lookAt(0, 0, 0);
 
   renderer = new THREE.WebGLRenderer({antialias: true});
-  renderer.setPixelRatio(window.devicePixelRatio || 1);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
   renderer.setSize(rect.width, rect.height);
   renderer.setClearColor(0xf4f6fb, 1);
   container3d.appendChild(renderer.domElement);
@@ -663,6 +731,16 @@ function refreshChargeMeshes() {
   }
 }
 
+function removeChargeMeshForCharge(charge) {
+  const idx = chargeMeshes.findIndex(m => m.charge === charge);
+  if (idx < 0) return;
+  const m = chargeMeshes[idx];
+  scene.remove(m.mesh);
+  m.mesh.geometry.dispose();
+  m.mesh.material.dispose();
+  chargeMeshes.splice(idx, 1);
+}
+
 function ensureParticleMeshes() {
   while (particleMeshes.length > state.particles.length) {
     const m = particleMeshes.pop();
@@ -677,10 +755,16 @@ function ensureParticleMeshes() {
     scene.add(mesh);
     particleMeshes.push(mesh);
     const trailGeom = new THREE.BufferGeometry();
+    const positions = new Float32Array(TRAIL_MAX_POINTS * 3);
+    const attr = new THREE.BufferAttribute(positions, 3);
+    attr.setUsage(THREE.DynamicDrawUsage);
+    trailGeom.setAttribute('position', attr);
+    trailGeom.setDrawRange(0, 0);
     const trailMat = new THREE.LineBasicMaterial({color: 0xc07a18, transparent: true, opacity: 0.85});
     const line = new THREE.Line(trailGeom, trailMat);
+    line.visible = false;
     scene.add(line);
-    trailLines.push({line, points: []});
+    trailLines.push({line, positions, count: 0, lastX: NaN, lastY: NaN, lastZ: NaN});
   }
   for (let i = 0; i < state.particles.length; i++) {
     const p = state.particles[i];
@@ -697,12 +781,7 @@ function updateParticleMeshes() {
     particleMeshes[i].position.set(p.x, y3d, -p.y);
     if (state.showTrail) {
       const tl = trailLines[i];
-      tl.points.push(p.x, y3d, -p.y);
-      if (tl.points.length > 2000*3) tl.points.splice(0, tl.points.length - 2000*3);
-      tl.line.geometry.dispose();
-      tl.line.geometry = new THREE.BufferGeometry();
-      tl.line.geometry.setAttribute('position', new THREE.Float32BufferAttribute(tl.points, 3));
-      tl.line.visible = true;
+      appendTrailPoint(tl, p.x, y3d, -p.y);
     } else {
       trailLines[i].line.visible = false;
     }
@@ -728,10 +807,20 @@ function stepPhysics(dt) {
     // 2D: a = (q/m) E.  3D-equivalent (small slope): a = -g ∇V = -g ∇h.
     // With q/m = g = 1 the two motions are identical.
     const [Ex, Ey] = field(p.x, p.y);
-    const ax = (p.q / p.m) * Ex;
-    const ay = (p.q / p.m) * Ey;
+    let ax = (p.q / p.m) * Ex;
+    let ay = (p.q / p.m) * Ey;
+    const amag = Math.hypot(ax, ay);
+    if (amag > MAX_ACCEL) {
+      const scale = MAX_ACCEL / amag;
+      ax *= scale; ay *= scale;
+    }
     p.vx += ax * dt;
     p.vy += ay * dt;
+    const speed = Math.hypot(p.vx, p.vy);
+    if (speed > MAX_SPEED) {
+      const scale = MAX_SPEED / speed;
+      p.vx *= scale; p.vy *= scale;
+    }
     p.x  += p.vx * dt;
     p.y  += p.vy * dt;
     // collisions with charges
@@ -743,15 +832,18 @@ function stepPhysics(dt) {
       const dx = p.x - c.x, dy = p.y - c.y;
       const r2 = dx*dx + dy*dy;
       const RMIN = 0.4;
-      if (r2 < RMIN*RMIN && r2 > 1e-6) {
+      if (r2 < RMIN*RMIN) {
         if (p.q > 0 && c.q < 0) {
           spawnExplosion(p.x, p.y);
+          removeChargeMeshForCharge(c);
           state.charges.splice(ci, 1);
           removeParticle(i);
+          invalidateFieldVisuals();
+          fieldRebuildDelayFrames = Math.max(fieldRebuildDelayFrames, 8);
           annihilated = true;
           break;
         }
-        const r = Math.sqrt(r2);
+        const r = Math.max(Math.sqrt(r2), 1e-6);
         const overlap = RMIN - r;
         p.x += (dx/r) * overlap;
         p.y += (dy/r) * overlap;
@@ -764,8 +856,6 @@ function stepPhysics(dt) {
       }
     }
     if (annihilated) {
-      potentialBufferDirty = true;
-      surfaceDirty = true;
       continue;
     }
     // outer boundary: particle escapes the simulation and vanishes
@@ -774,8 +864,13 @@ function stepPhysics(dt) {
       continue;
     }
     if (state.showTrail) {
-      p.trail.push({x: p.x, y: p.y});
-      if (p.trail.length > 2000) p.trail.shift();
+      const last = p.trail[p.trail.length - 1];
+      if (!last || Math.hypot(p.x - last.x, p.y - last.y) >= TRAIL_MIN_STEP) {
+        p.trail.push({x: p.x, y: p.y});
+        if (p.trail.length > TRAIL_MAX_POINTS) {
+          p.trail.splice(0, p.trail.length - TRAIL_MAX_POINTS);
+        }
+      }
     }
   }
 }
@@ -789,7 +884,8 @@ function animate() {
     for (let s = 0; s < SUBSTEPS; s++) stepPhysics(DT);
     stepExplosions(1/60);
   }
-  if (surfaceDirty) {
+  if (fieldRebuildDelayFrames > 0) fieldRebuildDelayFrames--;
+  if (surfaceDirty && fieldRebuildDelayFrames <= 0) {
     rebuildSurface();
     surfaceDirty = false;
   }
@@ -839,31 +935,40 @@ $('btn-reset').onclick = () => {
     p.vx = p.vx0; p.vy = p.vy0;
     p.trail = [{x: p.x, y: p.y}];
   }
-  for (const tl of trailLines) { tl.points = []; tl.line.geometry.dispose(); tl.line.geometry = new THREE.BufferGeometry(); }
+  for (const tl of trailLines) clearTrailLine(tl);
 };
 $('btn-clear-field').onclick = () => {
   state.charges.length = 0;
-  potentialBufferDirty = true;
-  rebuildSurface();
+  for (const m of chargeMeshes) {
+    scene.remove(m.mesh);
+    m.mesh.geometry.dispose();
+    m.mesh.material.dispose();
+  }
+  chargeMeshes.length = 0;
+  invalidateFieldVisuals();
 };
 $('btn-clear-parts').onclick = () => {
   while (state.particles.length > 0) removeParticle(state.particles.length - 1);
 };
 
-$('show-field').onchange = (e) => { state.showField = e.target.checked; };
-$('show-equi').onchange  = (e) => { state.showEqui  = e.target.checked; };
-$('show-pcolor').onchange = (e) => { state.showPColor = e.target.checked; };
+$('show-field').onchange = (e) => { state.showField = e.target.checked; static2DDirty = true; };
+$('show-equi').onchange  = (e) => { state.showEqui  = e.target.checked; static2DDirty = true; };
+$('show-pcolor').onchange = (e) => {
+  state.showPColor = e.target.checked;
+  potentialBufferDirty = true;
+  static2DDirty = true;
+};
 $('show-trail').onchange = (e) => {
   state.showTrail = e.target.checked;
   if (!state.showTrail) {
     for (const p of state.particles) p.trail = [];
-    for (const t of trailLines) { t.points = []; t.line.geometry.dispose(); t.line.geometry = new THREE.BufferGeometry(); }
+    for (const t of trailLines) clearTrailLine(t);
   }
 };
 
 $('preset-dipole').onclick = () => {
   state.charges = [{x:-3, y:0, q:1.5}, {x:3, y:0, q:-1.5}];
-  potentialBufferDirty = true; rebuildSurface();
+  invalidateFieldVisuals();
 };
 $('preset-quad').onclick = () => {
   state.charges = [
@@ -872,7 +977,7 @@ $('preset-quad').onclick = () => {
     {x:-3, y: 3, q:-1.2},
     {x: 3, y:-3, q:-1.2},
   ];
-  potentialBufferDirty = true; rebuildSurface();
+  invalidateFieldVisuals();
 };
 // Uniform field: two dense parallel rows of opposite charges,
 // like a parallel-plate capacitor. The interior region between the rows
@@ -887,7 +992,7 @@ $('preset-uniform').onclick = () => {
     state.charges.push({x, y:  5, q:  qEach});   // top row: positive
     state.charges.push({x, y: -5, q: -qEach});   // bottom row: negative
   }
-  potentialBufferDirty = true; rebuildSurface();
+  invalidateFieldVisuals();
 };
 
 setMode('pos');
@@ -899,6 +1004,7 @@ function start() {
   state.charges.push({x:-3, y:0, q:1.5});
   state.charges.push({x: 3, y:0, q:-1.5});
   potentialBufferDirty = true;
+  static2DDirty = true;
   rebuildSurface();
   animate();
 }

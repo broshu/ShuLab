@@ -1,0 +1,94 @@
+{
+  "generatedAt": "2026-05-12T06:48:47.904Z",
+  "count": 22,
+  "files": [
+    {
+      "path": "games/electric-field-lines/css/style.css",
+      "size": 8009
+    },
+    {
+      "path": "games/electric-field-lines/index.html",
+      "size": 6114
+    },
+    {
+      "path": "games/electric-field-lines/js/field-map.js",
+      "size": 13871
+    },
+    {
+      "path": "games/electric-field-lines/js/main.js",
+      "size": 14970
+    },
+    {
+      "path": "games/electric-field-lines/js/motion.js",
+      "size": 29688
+    },
+    {
+      "path": "games/potential_3d_visualization/index.html",
+      "size": 3663
+    },
+    {
+      "path": "games/potential_3d_visualization/main.js",
+      "size": 34409
+    },
+    {
+      "path": "games/potential_3d_visualization/style.css",
+      "size": 4015
+    },
+    {
+      "path": "ppt/带电粒子（体）在电场中运动的综合问题_优化版.pptx",
+      "size": 1269068
+    },
+    {
+      "path": "ppt/带电粒子（体）在电场中运动的综合问题.pptx",
+      "size": 1333422
+    },
+    {
+      "path": "ppt/第1课时　电容器及电容.pptx",
+      "size": 4247565
+    },
+    {
+      "path": "ppt/电容器的电容.pptx",
+      "size": 8374340
+    },
+    {
+      "path": "resources/必修三 三维设计/参考答案与详解/答案目录.docx",
+      "size": 26129
+    },
+    {
+      "path": "resources/必修三 三维设计/参考答案与详解/课时跟踪检测部分.docx",
+      "size": 1072870
+    },
+    {
+      "path": "resources/必修三 三维设计/参考答案与详解/学习讲义部分.docx",
+      "size": 1060942
+    },
+    {
+      "path": "resources/必修三 三维设计/参考答案与详解/综合质量检测部分.docx",
+      "size": 590390
+    },
+    {
+      "path": "resources/必修三 三维设计/综合质量检测/模块达标检测.docx",
+      "size": 460688
+    },
+    {
+      "path": "resources/必修三 三维设计/综合质量检测/章末综合检测（二）　静电场中的能量.docx",
+      "size": 364787
+    },
+    {
+      "path": "resources/必修三 三维设计/综合质量检测/章末综合检测（三）　电路及其应用.docx",
+      "size": 763189
+    },
+    {
+      "path": "resources/必修三 三维设计/综合质量检测/章末综合检测（四）　电能　能量守恒定律.docx",
+      "size": 2429480
+    },
+    {
+      "path": "resources/必修三 三维设计/综合质量检测/章末综合检测（五）　电磁感应与电磁波初步.docx",
+      "size": 1117751
+    },
+    {
+      "path": "resources/必修三 三维设计/综合质量检测/章末综合检测（一）　静电场及其应用.docx",
+      "size": 984464
+    }
+  ]
+}
