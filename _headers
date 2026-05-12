@@ -1,12 +1,9 @@
 # Cloudflare Pages 自定义响应头
 # 文档: https://developers.cloudflare.com/pages/configuration/headers/
+#
+# 注意：/api/* 由 Pages Functions 处理，响应头在 functions/api/files.js
+# 内部自行设置，不会被这里覆盖。
 
-# 文件清单：禁止缓存，保证每次部署后立即看到最新文件列表
-/files.json
-  Cache-Control: no-store, max-age=0
-  Content-Type: application/json; charset=utf-8
-
-# 站点根 HTML：短缓存即可（Pages 默认就够用，这里只是显式声明）
 /
   Cache-Control: public, max-age=0, must-revalidate
 /index.html

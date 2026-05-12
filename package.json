@@ -1,9 +1,0 @@
-{
-  "name": "phylab-uk",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Mr. Shu Physics Lab — China-friendly static site (no external CDN).",
-  "scripts": {
-    "build": "node generate-list.js"
-  }
-}

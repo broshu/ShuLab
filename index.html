@@ -7,10 +7,11 @@
 
     <!--
         ============================================================
-        中国大陆友好版本：完全不依赖 GitHub / jsDelivr / unpkg / cdnjs
-        / pages.dev 等任何境外 CDN。
-        所有 JS / CSS 内联，所有数据来自同站 ./files.json，
-        所有下载链接都是相对路径。
+        中国大陆友好版本：浏览器不直连任何境外服务。
+        - 文件列表通过同站接口 /api/files 获取
+          （由 Cloudflare Pages Functions 在边缘节点代理 GitHub API）
+        - 所有 JS / CSS 内联，无任何外部 CDN
+        - 所有下载链接都是相对路径，从 phylab.uk 本站提供
         ============================================================
     -->
 
@@ -197,11 +198,12 @@
 
     <script>
         // ===========================================================
-        //  本地 files.json 驱动，所有链接相对路径
+        //  通过同站接口 /api/files 获取文件列表
         //  -----------------------------------------------------------
-        //  - 不调用任何 GitHub / jsDelivr / unpkg / cdnjs / pages.dev
-        //  - files.json 由 generate-list.js 在 Cloudflare Pages
-        //    build 时自动重新生成
+        //  - 浏览器只请求 phylab.uk/api/files
+        //  - GitHub API 的调用发生在 Cloudflare 边缘 Pages Function
+        //    内部 (functions/api/files.js)，浏览器看不到也碰不到
+        //  - 所以中国大陆不挂 VPN 也能直接刷新就拿到最新文件树
         // ===========================================================
 
         const HIDDEN_FILES = new Set([
@@ -254,13 +256,18 @@
             a.localeCompare(b, "zh-Hans-CN", { numeric: true });
 
         async function loadFiles() {
-            // cache-busting：CF Pages 上 files.json 每次 build 都会覆盖
-            const res = await fetch("./files.json?t=" + Date.now(),
-                                    { cache: "no-store" });
+            // 同站接口，缓存策略由 Cloudflare Function 的响应头控制
+            const res = await fetch("/api/files");
             if (!res.ok) {
+                // 尽量把后端 JSON 错误信息透传出来
+                let detail = "";
+                try {
+                    const j = await res.json();
+                    detail = j.error || j.detail || "";
+                } catch (_) {}
                 throw new Error(
-                    "files.json 加载失败：HTTP " + res.status +
-                    "（请确认 build 步骤已生成 files.json）");
+                    "/api/files 加载失败：HTTP " + res.status +
+                    (detail ? "（" + detail + "）" : ""));
             }
             const data = await res.json();
             return (data.files || []).map(f => ({ path: f.path }));
@@ -378,7 +385,7 @@
         }
 
         function showError(err) {
-            const msg = "无法加载 files.json：" + err.message;
+            const msg = "无法加载文件列表：" + err.message;
             document.getElementById("ppt-list").innerHTML =
                 `<li class="error">${escapeHTML(msg)}</li>`;
             document.getElementById("resource-tree").innerHTML =
