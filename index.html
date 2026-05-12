@@ -2,21 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mr. Shu Physics Lab</title>
+
+    <!--
+        ============================================================
+        中国大陆友好版本：完全不依赖 GitHub / jsDelivr / unpkg / cdnjs
+        / pages.dev 等任何境外 CDN。
+        所有 JS / CSS 内联，所有数据来自同站 ./files.json，
+        所有下载链接都是相对路径。
+        ============================================================
+    -->
+
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                         "PingFang SC", "Microsoft YaHei", sans-serif;
             margin: 0;
             padding: 40px 20px;
             background: #f5f7fa;
             color: #2c3e50;
         }
-        h1 {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+        h1 { text-align: center; margin-bottom: 40px; }
 
-        /* Two-column layout (auto-wrap) */
         .columns {
             display: flex;
             flex-wrap: wrap;
@@ -36,20 +44,10 @@
             padding: 28px 28px 24px;
             box-sizing: border-box;
         }
-        .panel h2 {
-            margin: 0 0 20px 0;
-            text-align: center;
-        }
+        .panel h2 { margin: 0 0 20px 0; text-align: center; }
 
-        /* Shared row layout for downloadable files */
-        .ppt-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        .ppt-list li + li {
-            margin-top: 8px;
-        }
+        .ppt-list { list-style: none; margin: 0; padding: 0; }
+        .ppt-list li + li { margin-top: 8px; }
         .ppt-row {
             display: flex;
             align-items: center;
@@ -61,15 +59,8 @@
             color: #2c3e50;
             transition: background 0.15s ease, transform 0.15s ease;
         }
-        .ppt-row:hover {
-            background: #fdecdc;
-            transform: translateX(2px);
-        }
-        .ppt-row .ppt-icon {
-            width: 28px;
-            height: 28px;
-            flex-shrink: 0;
-        }
+        .ppt-row:hover { background: #fdecdc; transform: translateX(2px); }
+        .ppt-row .ppt-icon { width: 28px; height: 28px; flex-shrink: 0; }
         .ppt-row .filename {
             font-size: 14px;
             line-height: 1.4;
@@ -82,32 +73,18 @@
             flex-shrink: 0;
         }
 
-        /* Resources (green) variant */
-        .resource-row:hover {
-            background: #e6f4ec !important;
-        }
-        .resource-row .download-arrow {
-            color: #16a085 !important;
-        }
+        .resource-row:hover { background: #e6f4ec !important; }
+        .resource-row .download-arrow { color: #16a085 !important; }
+        .game-row:hover { background: #f1e6f7 !important; }
+        .game-row .download-arrow { color: #8e44ad !important; }
 
-        /* Games (purple) variant */
-        .game-row:hover {
-            background: #f1e6f7 !important;
-        }
-        .game-row .download-arrow {
-            color: #8e44ad !important;
-        }
-
-        /* Collapsible folder tree */
         .resource-tree {
             font-size: 14px;
             max-height: 70vh;
             overflow-y: auto;
             padding-right: 4px;
         }
-        .resource-tree details.folder {
-            margin: 2px 0;
-        }
+        .resource-tree details.folder { margin: 2px 0; }
         .resource-tree summary {
             display: flex;
             align-items: center;
@@ -143,7 +120,6 @@
         .resource-tree .file-row { padding: 8px 10px; margin: 2px 0; }
         .resource-tree .file-row .filename { font-size: 13px; }
 
-        /* Loading / empty / error states */
         .loading, .empty, .error {
             text-align: center;
             color: #90a4b3;
@@ -153,7 +129,6 @@
         }
         .error { color: #c0392b; }
 
-        /* Ask a Question panel */
         .ask-panel { text-align: center; }
         .ask-panel p { color: #6b7c8a; margin: 0 0 24px 0; }
         .ask-button {
@@ -182,7 +157,6 @@
     <h1>Welcome to Mr. Shu Physics Lab</h1>
 
     <div class="columns">
-        <!-- Lecture Slides — populated by JS from GitHub -->
         <section class="panel">
             <h2>Lecture Slides</h2>
             <ul id="ppt-list" class="ppt-list">
@@ -190,7 +164,6 @@
             </ul>
         </section>
 
-        <!-- Resources — populated by JS from GitHub -->
         <section class="panel">
             <h2>Resources</h2>
             <div id="resource-tree" class="resource-tree">
@@ -198,7 +171,6 @@
             </div>
         </section>
 
-        <!-- Games — populated by JS from GitHub -->
         <section class="panel">
             <h2>Games</h2>
             <ul id="game-list" class="ppt-list">
@@ -206,14 +178,17 @@
             </ul>
         </section>
 
-        <!-- Ask a Question -->
         <section class="panel ask-panel">
             <h2>Ask a Question</h2>
-            <a class="ask-button" href="https://forms.microsoft.com/r/Lg4N3RAWZR" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <a class="ask-button" href="https://forms.microsoft.com/r/Lg4N3RAWZR"
+               target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none"
+                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-1.5 2-2.5 2.8-.5.4-.5 1-.5 1.7M12 17h.01"
-                          stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="12" cy="12" r="9.5" stroke="#ffffff" stroke-width="2"/>
+                          stroke="#ffffff" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="12" r="9.5"
+                            stroke="#ffffff" stroke-width="2"/>
                 </svg>
                 Ask a Question
             </a>
@@ -222,88 +197,83 @@
 
     <script>
         // ===========================================================
-        //  Auto-load file lists from GitHub repo (broshu/ShuLab)
+        //  本地 files.json 驱动，所有链接相对路径
         //  -----------------------------------------------------------
-        //  Whenever you push new files to the `ppt/` or `resources/`
-        //  folders on GitHub, they will appear on this page automatically
-        //  the next time someone loads it. No HTML edits required.
+        //  - 不调用任何 GitHub / jsDelivr / unpkg / cdnjs / pages.dev
+        //  - files.json 由 generate-list.js 在 Cloudflare Pages
+        //    build 时自动重新生成
         // ===========================================================
 
-        const REPO_OWNER = "broshu";
-        const REPO_NAME  = "ShuLab";
-        const BRANCH     = "main";
+        const HIDDEN_FILES = new Set([
+            ".DS_Store", "README.md", ".gitkeep", ".gitattributes"
+        ]);
 
-        // Files we never want to show in the listing
-        const HIDDEN_FILES = new Set([".DS_Store", "README.md"]);
-
-        // SVG icon templates (kept inline so site has no external deps)
+        // 内联 SVG 图标，避免任何外部资源
         const ICON_PPT = `
-            <svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <svg class="ppt-icon" viewBox="0 0 64 64"
+                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z"
                       fill="#ffffff" stroke="#d35400" stroke-width="2"/>
                 <path d="M40 4 V18 H54" fill="none" stroke="#d35400" stroke-width="2"/>
                 <rect x="16" y="34" width="32" height="18" rx="2" fill="#d35400"/>
-                <text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif"
-                      font-size="10" font-weight="bold" fill="#ffffff">PPT</text>
+                <text x="32" y="47" text-anchor="middle"
+                      font-family="Arial, sans-serif" font-size="10"
+                      font-weight="bold" fill="#ffffff">PPT</text>
             </svg>`;
 
         const ICON_DOC = `
-            <svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <svg class="ppt-icon" viewBox="0 0 64 64"
+                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path d="M14 4 H40 L54 18 V56 a4 4 0 0 1 -4 4 H14 a4 4 0 0 1 -4 -4 V8 a4 4 0 0 1 4 -4 z"
                       fill="#ffffff" stroke="#16a085" stroke-width="2"/>
                 <path d="M40 4 V18 H54" fill="none" stroke="#16a085" stroke-width="2"/>
                 <rect x="16" y="34" width="32" height="18" rx="2" fill="#16a085"/>
-                <text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif"
-                      font-size="9" font-weight="bold" fill="#ffffff">DOC</text>
+                <text x="32" y="47" text-anchor="middle"
+                      font-family="Arial, sans-serif" font-size="9"
+                      font-weight="bold" fill="#ffffff">DOC</text>
             </svg>`;
 
-        // Stylized game-controller icon
         const ICON_GAME = `
-            <svg class="ppt-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <svg class="ppt-icon" viewBox="0 0 64 64"
+                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <rect x="6" y="20" width="52" height="30" rx="14"
                       fill="#ffffff" stroke="#8e44ad" stroke-width="2"/>
-                <!-- D-pad on left -->
                 <rect x="14" y="32" width="12" height="4" rx="1" fill="#8e44ad"/>
                 <rect x="18" y="28" width="4" height="12" rx="1" fill="#8e44ad"/>
-                <!-- Two buttons on right -->
                 <circle cx="42" cy="30" r="3" fill="#8e44ad"/>
                 <circle cx="48" cy="38" r="3" fill="#8e44ad"/>
             </svg>`;
 
-        // ---- helpers ----
         const escapeHTML = (s) => String(s).replace(/[&<>"']/g,
             c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]));
 
-        // GitHub raw download URL for a path in the repo
-        const rawUrl = (path) =>
-            `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${encodeURI(path)}`;
+        // 把路径变成可用的相对 URL：encodeURI 处理中文/空格，保留 "/"
+        const localUrl = (path) => "./" + encodeURI(path);
 
-        // Locale-aware sort that puts folders/files in a sensible order
-        const zhSort = (a, b) => a.localeCompare(b, "zh-Hans-CN", { numeric: true });
+        const zhSort = (a, b) =>
+            a.localeCompare(b, "zh-Hans-CN", { numeric: true });
 
-        // ---- main: fetch entire repo file tree in one call ----
-        async function loadFileTree() {
-            const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/${BRANCH}?recursive=1`;
-            const res = await fetch(url, { headers: { "Accept": "application/vnd.github+json" } });
+        async function loadFiles() {
+            // cache-busting：CF Pages 上 files.json 每次 build 都会覆盖
+            const res = await fetch("./files.json?t=" + Date.now(),
+                                    { cache: "no-store" });
             if (!res.ok) {
-                throw new Error(`GitHub API returned ${res.status}. ` +
-                    (res.status === 404 ? "Repo not found or private." :
-                     res.status === 403 ? "Rate-limited (try again later)." : ""));
+                throw new Error(
+                    "files.json 加载失败：HTTP " + res.status +
+                    "（请确认 build 步骤已生成 files.json）");
             }
             const data = await res.json();
-            return data.tree || [];
+            return (data.files || []).map(f => ({ path: f.path }));
         }
 
-        // ---- render Lecture Slides (flat list of .pptx files in ppt/) ----
         function renderPPT(tree) {
             const list = document.getElementById("ppt-list");
             const files = tree
-                .filter(it => it.type === "blob")
                 .filter(it => it.path.startsWith("ppt/"))
                 .map(it => it.path.substring("ppt/".length))
-                .filter(name => !name.includes("/"))            // top-level only
+                .filter(name => !name.includes("/"))
                 .filter(name => !HIDDEN_FILES.has(name))
-                .filter(name => /\.(pptx?|key)$/i.test(name))   // only slide files
+                .filter(name => /\.(pptx?|key)$/i.test(name))
                 .sort(zhSort);
 
             if (files.length === 0) {
@@ -313,7 +283,7 @@
 
             list.innerHTML = files.map(name => `
                 <li>
-                    <a class="ppt-row" href="${rawUrl("ppt/" + name)}" download>
+                    <a class="ppt-row" href="${localUrl("ppt/" + name)}" download>
                         ${ICON_PPT}
                         <span class="filename">${escapeHTML(name)}</span>
                         <span class="download-arrow">↓</span>
@@ -321,23 +291,17 @@
                 </li>`).join("");
         }
 
-        // ---- render Resources as a nested collapsible tree ----
         function renderResources(tree) {
             const container = document.getElementById("resource-tree");
 
-            // Keep only blobs under resources/, drop hidden files
             const blobs = tree
-                .filter(it => it.type === "blob" && it.path.startsWith("resources/"))
-                .filter(it => {
-                    const name = it.path.split("/").pop();
-                    return !HIDDEN_FILES.has(name);
-                });
+                .filter(it => it.path.startsWith("resources/"))
+                .filter(it => !HIDDEN_FILES.has(it.path.split("/").pop()));
 
-            // Build a nested tree: { children: {name: node}, files: [{name, path}] }
             const root = { children: {}, files: [] };
             for (const item of blobs) {
                 const parts = item.path.split("/");
-                parts.shift();                          // drop leading "resources"
+                parts.shift(); // 去掉 "resources"
                 const fileName = parts.pop();
                 let node = root;
                 for (const p of parts) {
@@ -365,7 +329,8 @@
             const fileHTML = [...node.files]
                 .sort((a, b) => zhSort(a.name, b.name))
                 .map(f => `
-                    <a class="ppt-row resource-row file-row" href="${rawUrl(f.path)}" download>
+                    <a class="ppt-row resource-row file-row"
+                       href="${localUrl(f.path)}" download>
                         ${ICON_DOC}
                         <span class="filename">${escapeHTML(f.name)}</span>
                         <span class="download-arrow">↓</span>
@@ -374,9 +339,6 @@
             return folderHTML + fileHTML;
         }
 
-        // ---- render Games panel ----
-        // A "game" is any top-level folder under games/ that contains an index.html.
-        // Folder name is used as the display name. Clicking opens the game in a new tab.
         function renderGames(tree) {
             const list = document.getElementById("game-list");
 
@@ -387,18 +349,15 @@
                 if (!item.path.startsWith("games/")) continue;
                 const rel = item.path.substring("games/".length);
                 const parts = rel.split("/");
-
-                if (item.type === "tree" && parts.length === 1 && parts[0]) {
-                    folders.add(parts[0]);                    // top-level subfolder
-                }
-                if (item.type === "blob" && parts.length === 2 &&
+                if (parts.length >= 1 && parts[0]) folders.add(parts[0]);
+                if (parts.length === 2 &&
                     parts[1].toLowerCase() === "index.html") {
-                    indexHtmlOwners.add(parts[0]);            // folder has an index.html
+                    indexHtmlOwners.add(parts[0]);
                 }
             }
 
             const games = [...folders]
-                .filter(f => indexHtmlOwners.has(f))          // require an index.html
+                .filter(f => indexHtmlOwners.has(f))
                 .sort(zhSort);
 
             if (games.length === 0) {
@@ -406,10 +365,10 @@
                 return;
             }
 
-            // Use a relative URL so the game's own assets (css/js/images) load correctly
             list.innerHTML = games.map(name => `
                 <li>
-                    <a class="ppt-row game-row" href="games/${encodeURI(name)}/index.html"
+                    <a class="ppt-row game-row"
+                       href="${localUrl("games/" + name + "/index.html")}"
                        target="_blank" rel="noopener">
                         ${ICON_GAME}
                         <span class="filename">${escapeHTML(name)}</span>
@@ -418,9 +377,8 @@
                 </li>`).join("");
         }
 
-        // ---- error display ----
         function showError(err) {
-            const msg = `Couldn't load files from GitHub: ${err.message}`;
+            const msg = "无法加载 files.json：" + err.message;
             document.getElementById("ppt-list").innerHTML =
                 `<li class="error">${escapeHTML(msg)}</li>`;
             document.getElementById("resource-tree").innerHTML =
@@ -430,8 +388,7 @@
             console.error(err);
         }
 
-        // ---- kick it off ----
-        loadFileTree()
+        loadFiles()
             .then(tree => { renderPPT(tree); renderResources(tree); renderGames(tree); })
             .catch(showError);
     </script>
